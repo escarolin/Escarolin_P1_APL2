@@ -1,5 +1,5 @@
 ﻿@page "/Productos"
-@page "/Productos/{ProductoId:int}"
+@page "/Productos/{Id:int}"
 
 @using Escarolin_P1_APL2.Models;
 @using Escarolin_P1_APL2.BLL;
@@ -84,14 +84,15 @@
 
 @code {
     [Parameter]
-    public int ProductoId { get; set; }
+    public int Id { get; set; }
 
     private Productos productos = new Productos();
+
 
     protected override void OnInitialized()
     {
         Nuevo();
-        Buscar();
+        BuscarParametro();
     }
 
     private void Operacion()
@@ -109,9 +110,33 @@
 
     private void Buscar()
     {
-        if (productos.ProductoId > 0)
+        if (productos.ProductoId == 0)
+        {
+            Nuevo(); toast.ShowWarning( "Producto no encontrado");
+
+        }
+        else
         {
             var encontrado = ProductosBLL.Buscar(productos.ProductoId);
+
+            if (encontrado != null)
+                this.productos = encontrado;
+            else
+                toast.ShowWarning("No se ha encontrado");
+        }
+    }
+
+    private void BuscarParametro ()
+    {
+        if (Id == 0)
+        {
+            Nuevo(); toast.ShowWarning("Producto no encontrado");
+
+        }
+        else
+        {
+
+            var encontrado = ProductosBLL.Buscar(Id);
 
             if (encontrado != null)
                 this.productos = encontrado;
